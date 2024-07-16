@@ -11,5 +11,5 @@ body {
 }
 
 .columns-secondary {
-    @apply col-span-3 bg-zinc-800 text-white p-3;
+    @apply col-span-3 bg-zinc-900 text-white p-3;
 }
