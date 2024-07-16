@@ -7,5 +7,9 @@ body {
 }
 
 .columns {
-    @apply bg-zinc-900 text-white p-4;
+    @apply col-span-6 bg-zinc-900 text-white p-5;
+}
+
+.columns-secondary {
+    @apply col-span-3 bg-zinc-800 text-white p-3;
 }
