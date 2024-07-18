@@ -1,14 +1,12 @@
 // components/Chat.tsx
 import React, { useEffect, useState } from 'react';
+import { ChatProps } from '../types/propsComponents/chat';
 
 
-const Chat: React.FC = () => {
+const Chat: React.FC<ChatProps> = ({ apiKey }) => {
   const [messages, setMessages] = useState<Message[]>([]);
   const [message, setMessage] = useState('');
   const [loading, setLoading] = useState(false);
-  const [key, setKey] = useState('');
-
-  useEffect(() => console.log(message), [message]);
 
   const sendMessage = () => {
     const input = document.querySelector('#messageInput') as HTMLInputElement;
@@ -35,7 +33,7 @@ const Chat: React.FC = () => {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        'Key': btoa(key),
+        'Key': btoa(apiKey),
       },
       body: JSON.stringify({ message: text }),
     });
@@ -55,13 +53,8 @@ const Chat: React.FC = () => {
     setMessage(e.target.value);
   }
 
-  const setKeyInput = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setKey(e.target.value);
-  }
-
   return (
     <div className="flex flex-col h-full bg-zinc-200 text-white p-4 w-full rounded-2xl">
-      <input type='password' className='text-black' value={key} onChange={setKeyInput}></input>
       <div className="flex-1 overflow-auto">
         {messages.map((message) => (
           <div
