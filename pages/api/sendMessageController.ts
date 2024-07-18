@@ -9,7 +9,9 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     }
 
     const { message } = req.body;
+    const { key = '' } = req.headers;
 
+    if (!key) res.status(403).json({ message: 'Key is required' });
     
-	return res.status(200).json(await getResponseMessage(message));
+	return res.status(200).json(await getResponseMessage(message, atob(key as string)));
 } 

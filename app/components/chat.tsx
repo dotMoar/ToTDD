@@ -1,22 +1,26 @@
 // components/Chat.tsx
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 
 
 const Chat: React.FC = () => {
   const [messages, setMessages] = useState<Message[]>([]);
+  const [message, setMessage] = useState('');
   const [loading, setLoading] = useState(false);
+  const [key, setKey] = useState('');
+
+  useEffect(() => console.log(message), [message]);
 
   const sendMessage = () => {
-    const input = document.querySelector('input') as HTMLInputElement;
-    const message = {
+    const input = document.querySelector('#messageInput') as HTMLInputElement;
+    const objectMessage = {
       id: messages.length + 1,
-      text: input.value,
+      text: message,
       sender: 'person1',
     };
-    setMessages((prevMessages: Message[]) => [...prevMessages, message]);
+    setMessages((prevMessages: Message[]) => [...prevMessages, objectMessage]);
     input.value = '';
 
-    fetchMessages(message);
+    fetchMessages(objectMessage);
   };
 
   const pressEnter = (e: React.KeyboardEvent<HTMLInputElement>) => {
@@ -31,12 +35,12 @@ const Chat: React.FC = () => {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
+        'Key': btoa(key),
       },
       body: JSON.stringify({ message: text }),
     });
 
     const data = await response.json();
-
     const iaMessage = {
       id: messages.length + 2,
       text: data.text,
@@ -47,8 +51,17 @@ const Chat: React.FC = () => {
     setMessages((prevMessages: Message[]) => [...prevMessages, iaMessage]);
   };
 
+  const writingMessage = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setMessage(e.target.value);
+  }
+
+  const setKeyInput = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setKey(e.target.value);
+  }
+
   return (
     <div className="flex flex-col h-full bg-zinc-200 text-white p-4 w-full rounded-2xl">
+      <input type='password' className='text-black' value={key} onChange={setKeyInput}></input>
       <div className="flex-1 overflow-auto">
         {messages.map((message) => (
           <div
@@ -74,8 +87,9 @@ const Chat: React.FC = () => {
           className="flex-1 p-2 rounded-lg bg-zinc-100 text-zinc-800 shadow-xl"
           placeholder="Escribe un mensaje..."
           onKeyDown={pressEnter}
+          onChange={writingMessage}
         />
-        <button onClick={sendMessage} className="ml-2 p-2 rounded-lg bg-zinc-700 text-white">
+        <button onClick={sendMessage} id="messageInput" className="ml-2 p-2 rounded-lg bg-zinc-700 text-white">
           Enviar
         </button>
       </div>
