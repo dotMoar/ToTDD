@@ -3,7 +3,7 @@ import React, { useEffect, useState } from 'react';
 import { ChatProps } from '../types/propsComponents/chat';
 
 
-const Chat: React.FC<ChatProps> = ({ apiKey }) => {
+const Chat: React.FC<ChatProps> = ({ apiKey, model }) => {
   const [messages, setMessages] = useState<Message[]>([]);
   const [message, setMessage] = useState('');
   const [loading, setLoading] = useState(false);
@@ -33,7 +33,8 @@ const Chat: React.FC<ChatProps> = ({ apiKey }) => {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        'Key': btoa(apiKey),
+        'Key': btoa(apiKey), 
+        'model': model
       },
       body: JSON.stringify({ message: text }),
     });
