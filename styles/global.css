@@ -1,3 +1,5 @@
+@import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap');
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -12,4 +14,24 @@ body {
 
 .columns-secondary {
     @apply col-span-3 bg-zinc-900 text-white p-3;
+}
+
+
+.font-pixel {
+    font-family: 'Press Start 2P', cursive;
+}
+
+.recommended-text {
+    color: #FFD700;
+    /* Dorado */
+    text-shadow:
+        1px 1px 0 #000,
+        -1px -1px 0 #000,
+        1px -1px 0 #000,
+        -1px 1px 0 #000,
+        2px 2px 0 #000,
+        -2px -2px 0 #000,
+        2px -2px 0 #000,
+        -2px 2px 0 #000;
+    /* Sombra negra alrededor del texto */
 }
