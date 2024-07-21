@@ -1,13 +1,12 @@
 import { generateText } from "ai"
 import { createOpenAI } from "@ai-sdk/openai"
+import { OpenIAResponse } from '../types/openIaResponse';
 
 export const getResponseMessage = async (message: Message, key: string, model: string): Promise<any> => {
     const openai = createOpenAI({
         compatibility: 'strict',
         apiKey: key,
     });
-
-    console.log(model)
 
     try {
         const response = await generateText({
@@ -21,3 +20,21 @@ export const getResponseMessage = async (message: Message, key: string, model: s
         return error;
     }
 };
+
+export const testConnectionConfiguration = async (key: string, model: string) => {
+    try {
+        const openai = createOpenAI({
+            compatibility: 'strict',
+            apiKey: key,
+        });
+
+        const response = await generateText({
+            model: openai(`model`),
+            prompt: `test connection`,
+        })
+
+        return response;
+    } catch (error) {
+        return error as OpenIAResponse;
+    }
+}
