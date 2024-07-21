@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { configurationProps } from '../types/propsComponents/configuration';
 import Image from 'next/image';
 import openia from '../img/svg/openai.svg';
@@ -6,34 +6,78 @@ import { Models } from '../enums/models';
 
 export const Configuration: React.FC<configurationProps> = ({ setKey, setModel, model }) => {
     const inputRef = useRef<HTMLInputElement>(null);
+    const [apiKey, setApiKey] = useState('');
+    const [newModel, setNewModel] = useState<Models>(model);
+    const [errorConfiguration, setErrorConfiguration] = useState(false);
+    const [acceptCookies, setAcceptCookies] = useState(false);
 
     useEffect(() => {
         const storedKey = localStorage.getItem('key') || '';
-        if (inputRef.current) {
-            inputRef.current.value = storedKey;
-        }
-        setKey(storedKey);
-
+        const storedAcceptCookies = localStorage.getItem('acceptCookies') === 'true';
         const storedModel = localStorage.getItem('model') as Models;
+
+        setApiKey(storedKey);
+        setKey(storedKey);
+        setAcceptCookies(storedAcceptCookies);
+
         if (storedModel) {
+            setNewModel(storedModel);
             setModel(storedModel);
         }
     }, [setKey, setModel]);
 
     const setKeyInput = (e: React.ChangeEvent<HTMLInputElement>) => {
         const newKey = e.target.value;
-        localStorage.setItem('key', newKey);
+        setApiKey(newKey);
         setKey(newKey);
     };
 
     const handleModelChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const newModel = e.target.value as Models;
+        setNewModel(newModel);
         setModel(newModel);
-        localStorage.setItem('model', newModel);
+    };
+
+    const confirmConfiguration = async () => {
+        const response = await fetch('/api/testConfiguration', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Key': btoa(apiKey),
+                'Model': newModel
+            }
+        });
+
+        if (response.status === 200 && acceptCookies) {
+            localStorage.setItem('key', apiKey);
+            localStorage.setItem('model', newModel);
+            localStorage.setItem('acceptCookies', 'true');
+        } else {
+            setErrorConfiguration(true);
+        }
+    };
+
+    const clearStorage = () => {
+        localStorage.removeItem('key');
+        localStorage.removeItem('model');
+        localStorage.removeItem('acceptCookies');
+        setApiKey('');
+        setModel(Models.GPT4O);
+        setNewModel(Models.GPT4O);
+        setAcceptCookies(false);
+    };
+
+    const toggleAcceptCookies = () => {
+        setAcceptCookies(prev => !prev);
     };
 
     return (
         <div className="mx-auto p-4">
+            <article className="bg-black text-green-500 border-4 border-green-700 rounded-lg shadow p-4 font-pixel">
+                <pre className="whitespace-pre-wrap">
+                    ToTDD - tittle
+                </pre>
+            </article>
             <section className="mb-4">
                 Este proyecto está enfocado a simular una partida de rol uno a uno con una IA. Para ello se necesita una clave de OpenAI para poder hacer uso de su API.
             </section>
@@ -57,8 +101,8 @@ export const Configuration: React.FC<configurationProps> = ({ setKey, setModel, 
                                     name="helper-radio"
                                     type="radio"
                                     value={Models.GPT4O}
-                                    className="w-4 h-4 text-blue-600 bg-zinc-100 border-zinc-300 focus:ring-blue-500 focus:ring-2"
-                                    checked={model === Models.GPT4O}
+                                    className="w-4 h-4 text-blue-600 bg-zinc-100 border-zinc-300"
+                                    checked={newModel === Models.GPT4O}
                                     onChange={handleModelChange}
                                 />
                             </div>
@@ -87,8 +131,8 @@ export const Configuration: React.FC<configurationProps> = ({ setKey, setModel, 
                                     name="helper-radio"
                                     type="radio"
                                     value={Models.GPT4Turbo}
-                                    className="w-4 h-4 text-blue-600 bg-zinc-100 border-zinc-300 focus:ring-blue-500 focus:ring-2"
-                                    checked={model === Models.GPT4Turbo}
+                                    className="w-4 h-4 text-blue-600 bg-zinc-100 border-zinc-300"
+                                    checked={newModel === Models.GPT4Turbo}
                                     onChange={handleModelChange}
                                 />
                             </div>
@@ -120,8 +164,8 @@ export const Configuration: React.FC<configurationProps> = ({ setKey, setModel, 
                                     name="helper-radio"
                                     type="radio"
                                     value={Models.GPT3_5Turbo}
-                                    className="w-4 h-4 text-blue-600 bg-zinc-100 border-zinc-300 focus:ring-blue-500 focus:ring-2"
-                                    checked={model === Models.GPT3_5Turbo}
+                                    className="w-4 h-4 text-blue-600 bg-zinc-100 border-zinc-300"
+                                    checked={newModel === Models.GPT3_5Turbo}
                                     onChange={handleModelChange}
                                 />
                             </div>
@@ -144,6 +188,30 @@ export const Configuration: React.FC<configurationProps> = ({ setKey, setModel, 
                     </li>
                 </ul>
             </div>
+            <div className="flex items-center mt-4">
+                <input 
+                    id="accept-cookies" 
+                    type="checkbox" 
+                    checked={acceptCookies} 
+                    onChange={toggleAcceptCookies} 
+                    className="mr-2"
+                />
+                <label htmlFor="accept-cookies" className="text-white cursor-pointer">Guardar key y configuración</label>
+            </div>
+            <button
+                className="w-full mt-4 bg-zinc-700 hover:bg-zinc-500 text-white font-bold py-2 px-4 rounded"
+                onClick={confirmConfiguration}
+            >
+                Confirmar Configuración
+            </button>
+            <button onClick={clearStorage} className="w-full mt-4 rounded-lg py-2 px-4 bg-red-900 text-white">
+                Borrar configuración
+            </button>
+            {errorConfiguration && (
+                <div className="mt-4 text-red-500">
+                    Ocurrió un error con las credenciales o la disponibilidad del modelo.
+                </div>
+            )}
         </div>
     );
 };
