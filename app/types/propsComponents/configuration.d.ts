@@ -5,4 +5,5 @@ export interface configurationProps {
     setModel: (model: Models) => void;
     // model: Models;
     closeModal: () => void;
+    handleStep: (step: number) => void;
 }

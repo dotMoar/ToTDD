@@ -1,3 +1,3 @@
-export interface HistorySelectProps {
+export interface ScriptSelectProps {
     setHistory: (history: string) => void;
 }

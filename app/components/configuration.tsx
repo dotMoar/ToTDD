@@ -5,7 +5,7 @@ import openia from '../img/svg/openai.svg';
 import { Model, Models } from '../types/model/model';
 import { models as modelsList } from '../utils/objects/model';
 
-export const Configuration: React.FC<configurationProps> = ({ setKey, closeModal, setModel }) => {
+export const Configuration: React.FC<configurationProps> = ({ setKey, closeModal, setModel, handleStep }) => {
     const inputRef = useRef<HTMLInputElement>(null);
     const [apiKey, setApiKey] = useState('');
     const [models, setModels] = useState<Models>(modelsList);
@@ -80,6 +80,11 @@ export const Configuration: React.FC<configurationProps> = ({ setKey, closeModal
         setModel(models[e.target.value]);
     }
 
+    const handleClick = (e) => {
+        closeModal();
+        handleStep(1);
+    }
+
     const sortedModels = Object.values(models).sort((a: Model, b: Model) => a.order - b.order);
 
     return (
@@ -127,38 +132,19 @@ export const Configuration: React.FC<configurationProps> = ({ setKey, closeModal
                             </div>
                         ))}
                     </div>
-                    {/* <div className="flex items-center mt-4">
-                        <input
-                            id="accept-cookies"
-                            type="checkbox"
-                            checked={acceptCookies}
-                            onChange={toggleAcceptCookies}
-                            className="mr-2"
-                        />
-                        <label htmlFor="accept-cookies" className="text-white cursor-pointer">Guardar key y configuración</label>
-                    </div> */}
-
-                    {/* <button
-                        className="w-full mt-4 bg-zinc-700 hover:bg-zinc-500 text-white font-bold py-2 px-4 rounded"
-                    // onClick={confirmConfiguration}
-                    >
-                        Confirmar Configuración
-                    </button>
-                    <button onClick={clearStorage} className="w-full mt-4 rounded-lg py-2 px-4 bg-red-900 text-white">
-                        Borrar configuración
-                    </button> */}
-                    {/* {errorConfiguration && (
-                        <div className="mt-4 text-red-500">
-                            Ocurrió un error con las credenciales o la disponibilidad del modelo.
-                        </div>
-                    )}*/}
-                    <div className='flex justify-end'>
+                    <div className='flex justify-end pb-4'>
                         <button
                             className="bg-transparent border rounded-xl border-black font-pixel px-2 py-1 text-lg"
+                            onClick={handleClick}
                         >
                             Ingresar
                         </button>
                     </div>
+                </div>
+                <div>
+                    <p>
+                        ¿Necesitas ayuda? revisa la guía oficial de chatgpt
+                    </p>
                 </div>
             </div>
         </div>

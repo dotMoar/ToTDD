@@ -1,6 +1,7 @@
 import Chat from "@/app/components/chat";
 import { Configuration } from "@/app/components/configuration";
-import HistorySelect from "@/app/components/historySelect";
+import Init from "@/app/components/init";
+import ScriptSelect from "@/app/components/ScriptSelect";
 import { Model } from "@/app/types/model/model";
 import { models } from "@/app/utils/objects/model";
 import { useEffect, useState } from "react";
@@ -8,6 +9,7 @@ import { useEffect, useState } from "react";
 export default function Page() {
   const [key, setKey] = useState('');
   const [model, setModel] = useState<Model>(models.gpt4o);
+  const [step, setStep] = useState(0);
   const [history, setHistory] = useState<string>('');
 
   const [state, setState] = useState({
@@ -26,50 +28,71 @@ export default function Page() {
     console.log(model)
   }, [key, model]);
 
+  const handleStep = (step: number) => {
+    setStep(step);
+  }
+
   return (
-    <div className="min-h-screen bg-stone-900 text-white flex flex-col justify-between">
-      <div className="flex-grow flex items-center justify-center">
-        <div className="text-center font-press-start max-w-lg w-full">
-          <h1 className="text-3xl">ToTDD</h1>
-          <h2 className="text-xs mb-8">Tales of the Digital Dungeon</h2>
-          <p className="mb-28">Descripción de que consiste o como funciona</p>
-          <button
-            className="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded mb-8"
-            onClick={configModal}
-          >
-            Comenzar
-          </button>
+
+    <div className="min-h-screen w-full bg-stone-900 text-white flex flex-col justify-between">
+
+      <>
+        <div className="flex-grow flex items-center justify-center">
+          <div className="text-center max-w-lg ">
+            <h1 className="text-3xl font-press-start">Para comenzar selecciona un modo de juego</h1>
+            <h2 className="text-xs mb-8">Recuerda que siempre podrás volver a comenzar</h2>
+
+            <div className="flex justify-center gap-4">
+              <div className="border border-gray-400 p-4 text-left flex flex-col ">
+                <h3 className="text-xl font-bold">Crea tu propia historia</h3>
+                <p className="text-sm mb-2">Crea tu prompt</p>
+                <p className="text-xs mb-4">Advertir que el resultado puede no ser el esperado</p>
+                <div className="flex-grow"></div>
+                <div className="flex justify-end">
+                  <button className="border border-gray-400 py-1 px-4 mt-4">Seleccionar</button>
+                </div>
+              </div>
+
+              <div className="border border-gray-400 p-4 text-left flex flex-col ">
+                <h3 className="text-xl font-bold">Crea tu propia historia</h3>
+                <p className="text-sm mb-2">Crea tu prompt</p>
+                <p className="text-xs mb-4">Advertir que el resultado puede no ser el esperado</p>
+                <div className="flex-grow"></div>
+                <div className="flex justify-end">
+                  <button className="border border-gray-400 py-1 px-4 mt-4">Seleccionar</button>
+                </div>
+              </div>
+
+              <div className="border border-gray-400 p-4 text-left flex flex-col ">
+                <h3 className="text-xl font-bold">Crea tu propia historia</h3>
+                <p className="text-sm mb-2">Crea tu prompt</p>
+                <p className="text-xs mb-4">Advertir que el resultado puede no ser el esperado</p>
+                <div className="flex-grow"></div>
+                <div className="flex justify-end">
+                  <button className="border border-gray-400 py-1 px-4 mt-4">Seleccionar</button>
+                </div>
+              </div>
+            </div>
+
+          </div>
         </div>
-      </div>
-      <button className="mb-8 font-press-start text-xs hover:text-stone-500 text-center">
-        Créditos
-      </button>
+        <button className="mb-8 font-press-start text-xs hover:text-stone-500 text-center">
+          Créditos
+        </button>
+      </>
+
+      {step === 2 && <Init configModal={configModal} />}
+      {step === 3 && <ScriptSelect setHistory={setHistory} />}
+      <p> key: {key} </p>
+      <p> model: {model?.name && model.name} </p>
       {state.configModal && (
         <>
           <Configuration
             setKey={setKey}
             setModel={setModel}
-            // model={model}
             closeModal={configModal}
+            handleStep={handleStep}
           />
-          {/* <h2 className="text-2xl mb-4">Configuración inicial</h2>
-              <p className="mb-4">Ingresa el key de chat gpt y selecciona el modelo que utilizarás.</p>
-
-              <div className="flex flex-col space-y-4">
-                <label className="inline-flex items-center">
-                  <input
-                    type="radio"
-                    className="form-radio h-5 w-5 text-gray-600"
-                    name="model"
-                    value="model1"
-                    checked={selectedModel === 'model1'}
-                    onChange={handleChange}
-                  />
-                  <span className="ml-2 text-white">Modelo 1 (recomendado)</span>
-                </label>
-              </div>*/}
-            
-
           <div className="fixed inset-0 bg-gray-900 opacity-50 z-40"></div>
         </>
       )
