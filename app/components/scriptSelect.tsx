@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from 'react';
-import { textScript } from '../guion/textScript';
+import { textScript } from '../scripts/textScript';
 import { TextScript } from '../types/script/textScript';
 import { ScriptSelectProps } from '../types/propsComponents/historySelect';
+import Image from 'next/image';
 
 export const ScriptSelect: React.FC<ScriptSelectProps> = ({ setHistory }) => {
     // const [selectedStory, setSelectedStory] = useState(null as TextScript | null);
@@ -13,32 +14,41 @@ export const ScriptSelect: React.FC<ScriptSelectProps> = ({ setHistory }) => {
 
     return (
         <>
-            <div className="flex-grow flex items-center justify-center">
-                <div className="text-center max-w-lg w-full">
-                    <h1 className="text-3xl font-press-start">Para comenzar selecciona un modo de juego</h1>
-                    <h2 className="text-xs mb-8">Recuerda que siempre podrás volver a comenzar</h2>
+            <div className="flex-grow flex items-center justify-center w-full">
+                <div className="text-center max-w-50 w-full"> {/* Aumenté el max-w */}
+                    <h1 className="text-2xl font-pixel mb-2">Para comenzar selecciona un modo de juego</h1>
+                    <h2 className="text-1xl mb-8">Recuerda que siempre podrás volver a comenzar</h2>
 
-                    <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                        <div className="border border-gray-700 p-4 text-left">
-                            <h3 className="text-xl font-bold">Historia 1</h3>
-                            <p className="text-sm mb-2">Despiertas en un lugar desconocido, estás solo y solo puedes ver tu reflejo</p>
-                            <p className="text-xs mb-4">Terror psicológico</p>
-                            <button className="border border-gray-700 py-1 px-4 mt-4">Seleccionar</button>
-                        </div>
+                    <div className="flex justify-center gap-4 flex-wrap mb-6"> {/* Añadido flex-wrap */}
 
-                        <div className="border border-gray-700 p-4 text-left">
-                            <h3 className="text-xl font-bold">Historia 1</h3>
-                            <p className="text-sm mb-2">Esto es el contexto de la historia 1, debe ser un breve relato de la configuración y el tipo de modo que seleccionará el usuario</p>
-                            <p className="text-xs mb-4">Detalle técnico de historia (tags) Suspenso, 1920, ciudad</p>
-                            <button className="border border-gray-700 py-1 px-4 mt-4">Seleccionar</button>
-                        </div>
+                        {textScript.map((story) => (
+                            <div key={story.id} className="border border-white hover:border-red-800 p-4 text-left flex flex-col w-full sm:w-[450px]"> {/* w-full para móviles */}
+                                <h2 className="text-l font-pixel mb-6">{story.title}</h2>
+                                <div className="flex">
+                                    <div className="flex-shrink-0">
+                                        <Image
+                                            alt="image-context-1"
+                                            src={story.img}
+                                            width={100}
+                                            height={100}
+                                            className="object-cover rounded"
+                                        />
+                                    </div>
+                                    <p className="text-xs mb-4 px-4">{story.context}</p>
+                                </div>
+                                <div className="mb-4 mt-2">
+                                    {story.tags.map((tag, index) => (
+                                        <span key={index} className="bg-black text-white px-2 py-1 text-xs rounded-lg mr-2">{tag}</span>
+                                    ))}
+                                </div>
+                                <div className="flex justify-end mb-2">
+                                    <button className="bg-transparent border rounded-xl border-white font-pixel px-1 py-1">
+                                        Seleccionar
+                                    </button>
+                                </div>
+                            </div>
+                        ))}
 
-                        <div className="border border-gray-400 p-4 text-left">
-                            <h3 className="text-xl font-bold">Crea tu propia historia</h3>
-                            <p className="text-sm mb-2">Crea tu prompt</p>
-                            <p className="text-xs mb-4">Advertir que el resultado puede no ser el esperado</p>
-                            <button className="border border-gray-400 py-1 px-4 mt-4">Seleccionar</button>
-                        </div>
                     </div>
                 </div>
             </div>
