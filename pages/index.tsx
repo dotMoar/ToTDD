@@ -8,7 +8,7 @@ import { useEffect, useState } from "react";
 
 export default function Page() {
   const [key, setKey] = useState('');
-  const [model, setModel] = useState<Model>(models.gpt4o);
+  const [model, setModel] = useState<Model>(models["gpt-4o"]);
   const [step, setStep] = useState(0);
   const [history, setHistory] = useState<string>('');
 
@@ -22,11 +22,6 @@ export default function Page() {
   const configModal = () => {
     setState({ ...state, configModal: !state.configModal });
   };
-
-  useEffect(() => {
-    console.log(key)
-    console.log(model)
-  }, [key, model]);
 
   const handleStep = (step: number) => {
     setStep(step);
@@ -45,6 +40,8 @@ export default function Page() {
             setModel={setModel}
             closeModal={configModal}
             handleStep={handleStep}
+            model={model}
+            keyChat={key}
           />
           <div className="fixed inset-0 bg-gray-900 opacity-50 z-40"></div>
         </>

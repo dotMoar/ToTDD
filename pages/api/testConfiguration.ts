@@ -12,8 +12,9 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
     if (!key) res.status(403).json({ message: 'Key is required' });
     const response = await testConnectionConfiguration(atob(key as string), model as string)
-
+    
     if ('statusCode' in response && response.statusCode === 401) {
+        console.log(response);
         res.status(401).json({ message: 'Unauthorized' });
     }
 

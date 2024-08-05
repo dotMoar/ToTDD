@@ -9,19 +9,19 @@ export const models: Models = {
     }
     , "gpt-4-turbo": {
         value: "gpt-4-turbo",
-        name: "gpt-4-turbo",
+        name: "GPT-4-turbo",
         order: 2,
         default: false
     }
     , "gpt-4o": {
         value: "gpt-4o",
-        name: "gpt-4o",
+        name: "GPT-4o",
         order: 1,
         default: true
     }
     , "gpt-4o-mini": {
         value: "gpt-4o-mini",
-        name: "gpt-4o-mini",
+        name: "GPT-4o-mini",
         order: 3,
         default: false
     }

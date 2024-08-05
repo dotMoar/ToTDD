@@ -22,6 +22,7 @@ export const getResponseMessage = async (message: Message, key: string, model: s
 };
 
 export const testConnectionConfiguration = async (key: string, model: string) => {
+    console.log(key, model)
     try {
         const openai = createOpenAI({
             compatibility: 'strict',
@@ -29,9 +30,11 @@ export const testConnectionConfiguration = async (key: string, model: string) =>
         });
 
         const response = await generateText({
-            model: openai(`model`),
+            model: openai(model),
             prompt: `test connection`,
         })
+
+        console.log(response)
 
         return response;
     } catch (error) {
